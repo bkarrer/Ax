@@ -32,7 +32,8 @@ src="/js/documentation_options.js">
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">isclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">ax.core.base_trial</span> <span class="k">import</span> <span class="n">BaseTrial</span>
@@ -51,8 +52,10 @@ src="/js/documentation_options.js">
     <span class="n">unimplemented_evaluation_function</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ax.exceptions.storage</span> <span class="k">import</span> <span class="n">JSONDecodeError</span>
+<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.base</span> <span class="k">import</span> <span class="n">Transform</span>
 <span class="kn">from</span> <span class="nn">ax.storage.json_store.decoders</span> <span class="k">import</span> <span class="n">batch_trial_from_json</span><span class="p">,</span> <span class="n">trial_from_json</span>
 <span class="kn">from</span> <span class="nn">ax.storage.json_store.registry</span> <span class="k">import</span> <span class="n">DECODER_REGISTRY</span>
+<span class="kn">from</span> <span class="nn">ax.storage.transform_registry</span> <span class="k">import</span> <span class="n">REVERSE_TRANSFORM_REGISTRY</span>
 
 
 <div class="viewcode-block" id="object_from_json"><a class="viewcode-back" href="../../../../storage.html#ax.storage.json_store.decoder.object_from_json">[docs]</a><span class="k">def</span> <span class="nf">object_from_json</span><span class="p">(</span><span class="n">object_json</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
@@ -93,7 +96,7 @@ src="/js/documentation_options.js">
 
         <span class="n">_class</span> <span class="o">=</span> <span class="n">DECODER_REGISTRY</span><span class="p">[</span><span class="n">_type</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">_class</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">isclass</span><span class="p">(</span><span class="n">_class</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">_class</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
             <span class="c1"># to access enum members by name, use item access</span>
             <span class="k">return</span> <span class="n">_class</span><span class="p">[</span><span class="n">object_json</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]]</span>
         <span class="k">elif</span> <span class="n">_class</span> <span class="o">==</span> <span class="n">GeneratorRun</span><span class="p">:</span>
@@ -104,6 +107,8 @@ src="/js/documentation_options.js">
             <span class="k">return</span> <span class="n">experiment_from_json</span><span class="p">(</span><span class="n">object_json</span><span class="o">=</span><span class="n">object_json</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">_class</span> <span class="o">==</span> <span class="n">SearchSpace</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">search_space_from_json</span><span class="p">(</span><span class="n">search_space_json</span><span class="o">=</span><span class="n">object_json</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">_class</span> <span class="o">==</span> <span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">transform_type_from_json</span><span class="p">(</span><span class="n">object_json</span><span class="o">=</span><span class="n">object_json</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">_class</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">object_from_json</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">object_json</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
     <span class="k">else</span><span class="p">:</span>
@@ -269,6 +274,14 @@ src="/js/documentation_options.js">
     <span class="n">experiment</span><span class="o">.</span><span class="n">_experiment_type</span> <span class="o">=</span> <span class="n">object_from_json</span><span class="p">(</span><span class="n">experiment_type_json</span><span class="p">)</span>
     <span class="n">experiment</span><span class="o">.</span><span class="n">_data_by_trial</span> <span class="o">=</span> <span class="n">data_from_json</span><span class="p">(</span><span class="n">data_by_trial_json</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">experiment</span></div>
+
+
+<div class="viewcode-block" id="transform_type_from_json"><a class="viewcode-back" href="../../../../storage.html#ax.storage.json_store.decoder.transform_type_from_json">[docs]</a><span class="k">def</span> <span class="nf">transform_type_from_json</span><span class="p">(</span><span class="n">object_json</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]:</span>
+    <span class="sd">"""Load the transform type from JSON."""</span>
+    <span class="n">index_in_registry</span> <span class="o">=</span> <span class="n">object_json</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"index_in_registry"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">index_in_registry</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">REVERSE_TRANSFORM_REGISTRY</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">"Unknown transform '{object_json.pop('transform_type')}'"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">REVERSE_TRANSFORM_REGISTRY</span><span class="p">[</span><span class="n">index_in_registry</span><span class="p">]</span></div>
 </pre></div>
 </div>
 </div>

@@ -32,10 +32,12 @@ src="/js/documentation_options.js">
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">isclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Type</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">ax.exceptions.storage</span> <span class="k">import</span> <span class="n">JSONEncodeError</span>
+<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.base</span> <span class="k">import</span> <span class="n">Transform</span>
 <span class="kn">from</span> <span class="nn">ax.storage.json_store.registry</span> <span class="k">import</span> <span class="n">ENCODER_REGISTRY</span>
 <span class="kn">from</span> <span class="nn">ax.utils.common.serialization</span> <span class="k">import</span> <span class="n">_is_named_tuple</span>
 <span class="kn">from</span> <span class="nn">ax.utils.common.typeutils</span> <span class="k">import</span> <span class="n">numpy_type_to_python_type</span>
@@ -45,8 +47,8 @@ src="/js/documentation_options.js">
     <span class="sd">"""Convert an Ax object to a JSON-serializable dictionary.</span>
 
 <span class="sd">    The root node passed to this function should always be an instance of a</span>
-<span class="sd">    core Ax class. The sub-fields of this object will then be recursively</span>
-<span class="sd">    passed to this function.</span>
+<span class="sd">    core Ax class or a JSON-compatible python builtin. The sub-fields of the</span>
+<span class="sd">    input will then be recursively passed to this function.</span>
 
 <span class="sd">    e.g. if we pass an instance of Experiment, we will first fall through</span>
 <span class="sd">    to the line `object_dict = ENCODER_REGISTRY[_type](object)`, which</span>
@@ -85,11 +87,14 @@ src="/js/documentation_options.js">
         <span class="p">}</span>
     <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">_type</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">"__type"</span><span class="p">:</span> <span class="n">_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="nb">object</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">isclass</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
+        <span class="c1"># There is no other way to check is object is of type Type[Transform].</span>
+        <span class="n">_type</span> <span class="o">=</span> <span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ENCODER_REGISTRY</span><span class="p">:</span>
         <span class="n">err</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">f</span><span class="s2">"Object passed to `object_to_json` (of type </span><span class="si">{_type}</span><span class="s2">) is not "</span>
-            <span class="n">f</span><span class="s2">"registered with a corresponding encoder in ENCODER_REGISTRY."</span>
+            <span class="n">f</span><span class="s2">"Object </span><span class="si">{object}</span><span class="s2"> passed to `object_to_json` (of type </span><span class="si">{_type}</span><span class="s2">) is "</span>
+            <span class="n">f</span><span class="s2">"not registered with a corresponding encoder in ENCODER_REGISTRY."</span>
         <span class="p">)</span>
         <span class="k">raise</span> <span class="n">JSONEncodeError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
     <span class="n">object_dict</span> <span class="o">=</span> <span class="n">ENCODER_REGISTRY</span><span class="p">[</span><span class="n">_type</span><span class="p">](</span><span class="nb">object</span><span class="p">)</span>
