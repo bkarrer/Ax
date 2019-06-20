@@ -289,7 +289,7 @@ src="/js/documentation_options.js">
 <span class="sd">            Tensor: `n`-dim Tensor of weights for each point.</span>
 <span class="sd">        """</span>
         <span class="n">options</span> <span class="o">=</span> <span class="n">model_gen_options</span> <span class="ow">or</span> <span class="p">{}</span>
-        <span class="n">acf_options</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"acqiusition_function_kwargs"</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">acf_options</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"acquisition_function_kwargs"</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">optimizer_options</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"optimizer_kwargs"</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="n">X_pending</span><span class="p">,</span> <span class="n">X_observed</span> <span class="o">=</span> <span class="n">_get_X_pending_and_observed</span><span class="p">(</span>
