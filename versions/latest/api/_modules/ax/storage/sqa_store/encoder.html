@@ -188,6 +188,7 @@ src="/js/documentation_options.js">
                 <span class="n">log_scale</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">log_scale</span><span class="p">,</span>
                 <span class="n">digits</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">digits</span><span class="p">,</span>
                 <span class="n">is_fidelity</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">is_fidelity</span><span class="p">,</span>
+                <span class="n">target_value</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">target_value</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">ChoiceParameter</span><span class="p">):</span>
             <span class="c1"># pyre-fixme[29]: `SQAParameter` is not a function.</span>
@@ -199,6 +200,7 @@ src="/js/documentation_options.js">
                 <span class="n">is_ordered</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">is_ordered</span><span class="p">,</span>
                 <span class="n">is_task</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">is_task</span><span class="p">,</span>
                 <span class="n">is_fidelity</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">is_fidelity</span><span class="p">,</span>
+                <span class="n">target_value</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">target_value</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">FixedParameter</span><span class="p">):</span>
             <span class="c1"># pyre-fixme[29]: `SQAParameter` is not a function.</span>
@@ -208,6 +210,7 @@ src="/js/documentation_options.js">
                 <span class="n">parameter_type</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">parameter_type</span><span class="p">,</span>
                 <span class="n">fixed_value</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
                 <span class="n">is_fidelity</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">is_fidelity</span><span class="p">,</span>
+                <span class="n">target_value</span><span class="o">=</span><span class="n">parameter</span><span class="o">.</span><span class="n">target_value</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SQAEncodeError</span><span class="p">(</span>
