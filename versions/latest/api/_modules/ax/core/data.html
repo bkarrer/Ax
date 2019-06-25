@@ -146,32 +146,36 @@ src="/js/documentation_options.js">
 
 <div class="viewcode-block" id="Data.from_evaluations"><a class="viewcode-back" href="../../../core.html#ax.Data.from_evaluations">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_evaluations</span><span class="p">(</span>
-        <span class="n">evaluations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span> <span class="n">trial_index</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="n">evaluations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span>
+        <span class="n">trial_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">sample_sizes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Data"</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Convert dict of evaluations to Ax data object.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            evaluations: Map from condition name to metric outcomes.</span>
+<span class="sd">            trial_index: Trial index to which this data belongs.</span>
+<span class="sd">            sample_sizes: Number of samples collected for each arm.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ax Data object.</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">Data</span><span class="p">(</span>
-            <span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">"arm_name"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-                        <span class="s2">"metric_name"</span><span class="p">:</span> <span class="n">metric_name</span><span class="p">,</span>
-                        <span class="s2">"mean"</span><span class="p">:</span> <span class="n">evaluation</span><span class="p">[</span><span class="n">metric_name</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                        <span class="s2">"sem"</span><span class="p">:</span> <span class="n">evaluation</span><span class="p">[</span><span class="n">metric_name</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
-                        <span class="s2">"trial_index"</span><span class="p">:</span> <span class="n">trial_index</span><span class="p">,</span>
-                    <span class="p">}</span>
-                    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">evaluation</span> <span class="ow">in</span> <span class="n">evaluations</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                    <span class="k">for</span> <span class="n">metric_name</span> <span class="ow">in</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-                <span class="p">]</span>
-            <span class="p">)</span>
-        <span class="p">)</span></div>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"arm_name"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">"metric_name"</span><span class="p">:</span> <span class="n">metric_name</span><span class="p">,</span>
+                <span class="s2">"mean"</span><span class="p">:</span> <span class="n">evaluation</span><span class="p">[</span><span class="n">metric_name</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s2">"sem"</span><span class="p">:</span> <span class="n">evaluation</span><span class="p">[</span><span class="n">metric_name</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s2">"trial_index"</span><span class="p">:</span> <span class="n">trial_index</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">evaluation</span> <span class="ow">in</span> <span class="n">evaluations</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">metric_name</span> <span class="ow">in</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">sample_sizes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+                <span class="n">record</span><span class="p">[</span><span class="s2">"n"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_sizes</span><span class="p">[</span><span class="n">record</span><span class="p">[</span><span class="s2">"arm_name"</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">Data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">records</span><span class="p">))</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
