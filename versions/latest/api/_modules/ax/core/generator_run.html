@@ -33,7 +33,7 @@ src="/js/documentation_options.js">
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">ax.core.arm</span> <span class="k">import</span> <span class="n">Arm</span>
@@ -104,6 +104,9 @@ src="/js/documentation_options.js">
         <span class="nb">type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">fit_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gen_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">bridge_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Inits GeneratorRun.</span>
@@ -124,12 +127,28 @@ src="/js/documentation_options.js">
 <span class="sd">                this generator run. For models with multiple invocations of gen, this is</span>
 <span class="sd">                typically the fitting time since the last call to gen.</span>
 <span class="sd">            gen_time: Optional number of seconds generation took.</span>
+<span class="sd">            model_key: Optional name of the model that was used to produce this</span>
+<span class="sd">                generator run.</span>
+<span class="sd">            model_kwargs: Optional dictionary of keyword arguments to the model</span>
+<span class="sd">                that was used to produce this generator run.</span>
+<span class="sd">            bridge_kwargs: Optional dictionary of keyword arguments to the model</span>
+<span class="sd">                bridge that was used to produce this generator run.</span>
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_arm_weight_table</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArmWeight</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arms</span><span class="p">))]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arms</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Weights and arms must have the same length."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bridge_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">model_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">model_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"Model key is required if model or bridge kwargs are provided."</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">bridge_kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">model_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"Both model kwargs and bridge kwargs are required if either "</span>
+                    <span class="s2">"one is provided."</span>
+                <span class="p">)</span>
         <span class="k">for</span> <span class="n">arm</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">arms</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
             <span class="n">existing_cw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arm_weight_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arm</span><span class="o">.</span><span class="n">signature</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">existing_cw</span><span class="p">:</span>
@@ -150,6 +169,9 @@ src="/js/documentation_options.js">
         <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fit_time</span> <span class="o">=</span> <span class="n">fit_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_gen_time</span> <span class="o">=</span> <span class="n">gen_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_key</span> <span class="o">=</span> <span class="n">model_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bridge_kwargs</span> <span class="o">=</span> <span class="n">bridge_kwargs</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">arms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Arm</span><span class="p">]:</span>
@@ -165,7 +187,6 @@ src="/js/documentation_options.js">
     <span class="k">def</span> <span class="nf">arm_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="n">Arm</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">"""Mapping from arms to weights (order matches order in</span>
 <span class="sd">        `arms` property).</span>
-
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">))</span>
 

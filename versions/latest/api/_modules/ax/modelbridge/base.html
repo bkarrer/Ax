@@ -123,6 +123,9 @@ src="/js/documentation_options.js">
         <span class="bp">self</span><span class="o">.</span><span class="n">_status_quo</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Observation</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_arms_by_signature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Arm</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transforms</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Transform</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bridge_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_space</span> <span class="o">=</span> <span class="n">search_space</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">experiment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -539,6 +542,9 @@ src="/js/documentation_options.js">
             <span class="k">else</span> <span class="p">(</span><span class="n">best_arm</span><span class="p">,</span> <span class="n">best_point_predictions</span><span class="p">),</span>
             <span class="n">fit_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_time_since_gen</span><span class="p">,</span>
             <span class="n">gen_time</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_gen_start</span><span class="p">,</span>
+            <span class="n">model_key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_key</span><span class="p">,</span>
+            <span class="n">model_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_kwargs</span><span class="p">,</span>
+            <span class="n">bridge_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bridge_kwargs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_time_since_gen</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">return</span> <span class="n">gr</span></div>
@@ -620,7 +626,22 @@ src="/js/documentation_options.js">
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">obs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">obs_data</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_in_design</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                 <span class="n">ood_obs_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">unwrap_observation_data</span><span class="p">(</span><span class="n">ood_obs_data</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">unwrap_observation_data</span><span class="p">(</span><span class="n">ood_obs_data</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_set_kwargs_to_save</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">bridge_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""Set properties used to save the model that created a given generator</span>
+<span class="sd">        run, on the `GeneratorRun` object. Each generator run produced by the</span>
+<span class="sd">        `gen` method of this model bridge will have the model key and kwargs</span>
+<span class="sd">        fields set as provided in arguments to this function.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_key</span> <span class="o">=</span> <span class="n">model_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bridge_kwargs</span> <span class="o">=</span> <span class="n">bridge_kwargs</span></div>
 
 
 <div class="viewcode-block" id="unwrap_observation_data"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.base.unwrap_observation_data">[docs]</a><span class="k">def</span> <span class="nf">unwrap_observation_data</span><span class="p">(</span><span class="n">observation_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ObservationData</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TModelPredict</span><span class="p">:</span>
