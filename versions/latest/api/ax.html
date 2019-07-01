@@ -1000,93 +1000,44 @@ Subclasses should override this to trial data computation for multiple metrics.<
 </dd></dl>
 <dl class="class">
 <dt id="ax.Models">
-<em class="property">class </em><code class="sig-prename descclassname">ax.</code><code class="sig-name descname">Models</code><a class="reference internal" href="_modules/ax/modelbridge/factory.html#Models"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ax.Models" title="Permalink to this definition">¶</a></dt>
-<dd><p>Registry of available factory functions.</p>
+<em class="property">class </em><code class="sig-prename descclassname">ax.</code><code class="sig-name descname">Models</code><a class="reference internal" href="_modules/ax/modelbridge/registry.html#Models"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ax.Models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registry of available models.</p>
+<p>Uses MODEL_KEY_TO_MODEL_SETUP to retrieve settings for model and model bridge,
+by the key stored in the enum value.</p>
+<p>To instantiate a model in this enum, simply call an enum member like so:
+<cite>Models.SOBOL(search_space=search_space)</cite> or
+<cite>Models.GPEI(experiment=experiment, data=data])</cite>. Keyword arguments
+specified to the call will be passed into the model or the model bridge
+constructors according to their keyword.</p>
+<p>For instance, <cite>Models.SOBOL(search_space=search_space, scramble=False)</cite>
+will instantiate a <cite>RandomModelBridge(search_space=search_space)</cite>
+with a <cite>SobolGenerator(scramble=False)</cite> underlying model.</p>
 <dl class="method">
-<dt id="ax.Models.BOTORCH">
-<code class="sig-name descname">BOTORCH</code><span class="sig-paren">(</span><em class="sig-param">data, search_space=None, dtype=torch.float64, device=device(type='cpu'), transforms=[&lt;class 'ax.modelbridge.transforms.out_of_design.OutOfDesign'&gt;, &lt;class 'ax.modelbridge.transforms.remove_fixed.RemoveFixed'&gt;, &lt;class 'ax.modelbridge.transforms.ordered_choice_encode.OrderedChoiceEncode'&gt;, &lt;class 'ax.modelbridge.transforms.one_hot.OneHot'&gt;, &lt;class 'ax.modelbridge.transforms.int_to_float.IntToFloat'&gt;, &lt;class 'ax.modelbridge.transforms.log.Log'&gt;, &lt;class 'ax.modelbridge.transforms.unit_x.UnitX'&gt;, &lt;class 'ax.modelbridge.transforms.ivw.IVW'&gt;, &lt;class 'ax.modelbridge.transforms.derelativize.Derelativize'&gt;, &lt;class 'ax.modelbridge.transforms.standardize_y.StandardizeY'&gt;], model_constructor=&lt;function get_and_fit_model&gt;, model_predictor=&lt;function predict_from_model&gt;, acqf_constructor=&lt;function get_NEI&gt;, acqf_optimizer=&lt;function scipy_optimizer&gt;, refit_on_cv=False, refit_on_update=True, optimization_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.Models.BOTORCH" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a BotorchModel.</p>
+<dt id="ax.Models.view_defaults">
+<code class="sig-name descname">view_defaults</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ax/modelbridge/registry.html#Models.view_defaults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ax.Models.view_defaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the default keyword arguments for the model and the modelbridge
+specified through the Models enum, for ease of use in notebook environment,
+since models and bridges cannot be inspected directly through the enum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="modelbridge.html#ax.modelbridge.torch.TorchModelBridge" title="ax.modelbridge.torch.TorchModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">TorchModelBridge</span></code></a></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple of default keyword arguments for the model and the model bridge.</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="method">
-<dt id="ax.Models.EMPIRICAL_BAYES_THOMPSON">
-<code class="sig-name descname">EMPIRICAL_BAYES_THOMPSON</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">search_space=None</em>, <em class="sig-param">num_samples=10000</em>, <em class="sig-param">min_weight=None</em>, <em class="sig-param">uniform_weights=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.Models.EMPIRICAL_BAYES_THOMPSON" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates an empirical Bayes / Thompson sampling model.</p>
+<dt id="ax.Models.view_kwargs">
+<code class="sig-name descname">view_kwargs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ax/modelbridge/registry.html#Models.view_kwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ax.Models.view_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains annotated keyword arguments that the model and the modelbridge
+(corresponding to a given member of the Models enum) constructors expect.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="modelbridge.html#ax.modelbridge.discrete.DiscreteModelBridge" title="ax.modelbridge.discrete.DiscreteModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteModelBridge</span></code></a></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.7)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</p>
 </dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.Models.FACTORIAL">
-<code class="sig-name descname">FACTORIAL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ax.Models.FACTORIAL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a factorial generator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="modelbridge.html#ax.modelbridge.discrete.DiscreteModelBridge" title="ax.modelbridge.discrete.DiscreteModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteModelBridge</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.Models.GPEI">
-<code class="sig-name descname">GPEI</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">search_space=None</em>, <em class="sig-param">dtype=torch.float64</em>, <em class="sig-param">device=device(type='cpu')</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.Models.GPEI" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a GP model that generates points with EI.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="modelbridge.html#ax.modelbridge.torch.TorchModelBridge" title="ax.modelbridge.torch.TorchModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">TorchModelBridge</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.Models.SOBOL">
-<code class="sig-name descname">SOBOL</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em>, <em class="sig-param">deduplicate=False</em>, <em class="sig-param">init_position=0</em>, <em class="sig-param">scramble=True</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.Models.SOBOL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a Sobol sequence quasi-random generator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>search_space</strong> (<a class="reference internal" href="core.html#ax.core.search_space.SearchSpace" title="ax.core.search_space.SearchSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">SearchSpace</span></code></a>) – Sobol generator search space.</p></li>
-<li><p><strong>kwargs</strong> – Custom args for sobol generator.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomModelBridge</span></code></p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>RandomModelBridge, with SobolGenerator as model.</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.Models.THOMPSON">
-<code class="sig-name descname">THOMPSON</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">search_space=None</em>, <em class="sig-param">num_samples=10000</em>, <em class="sig-param">min_weight=None</em>, <em class="sig-param">uniform_weights=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.Models.THOMPSON" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a Thompson sampling model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="modelbridge.html#ax.modelbridge.discrete.DiscreteModelBridge" title="ax.modelbridge.discrete.DiscreteModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteModelBridge</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.Models.UNIFORM">
-<code class="sig-name descname">UNIFORM</code><span class="sig-paren">(</span><em class="sig-param">deduplicate=False</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.Models.UNIFORM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiate uniform generator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>search_space</strong> (<a class="reference internal" href="core.html#ax.core.search_space.SearchSpace" title="ax.core.search_space.SearchSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">SearchSpace</span></code></a>) – Uniform generator search space.</p></li>
-<li><p><strong>kwargs</strong> – Custom args for uniform generator.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomModelBridge</span></code></p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>RandomModelBridge, with UniformGenerator as model.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple of annotated keyword arguments for the model and the model bridge.</p>
 </dd>
 </dl>
 </dd></dl>

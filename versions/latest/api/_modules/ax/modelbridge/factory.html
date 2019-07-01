@@ -29,7 +29,6 @@ src="/js/documentation_options.js">
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.</span>
 
-<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
@@ -40,32 +39,10 @@ src="/js/documentation_options.js">
 <span class="kn">from</span> <span class="nn">ax.core.search_space</span> <span class="k">import</span> <span class="n">SearchSpace</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.discrete</span> <span class="k">import</span> <span class="n">DiscreteModelBridge</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.random</span> <span class="k">import</span> <span class="n">RandomModelBridge</span>
+<span class="kn">from</span> <span class="nn">ax.modelbridge.registry</span> <span class="k">import</span> <span class="n">Cont_X_trans</span><span class="p">,</span> <span class="n">Models</span><span class="p">,</span> <span class="n">MTGP_trans</span><span class="p">,</span> <span class="n">Y_trans</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.torch</span> <span class="k">import</span> <span class="n">TorchModelBridge</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.base</span> <span class="k">import</span> <span class="n">Transform</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.convert_metric_names</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">ConvertMetricNames</span><span class="p">,</span>
-    <span class="n">tconfig_from_mt_experiment</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.derelativize</span> <span class="k">import</span> <span class="n">Derelativize</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.int_range_to_choice</span> <span class="k">import</span> <span class="n">IntRangeToChoice</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.int_to_float</span> <span class="k">import</span> <span class="n">IntToFloat</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.ivw</span> <span class="k">import</span> <span class="n">IVW</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.log</span> <span class="k">import</span> <span class="n">Log</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.one_hot</span> <span class="k">import</span> <span class="n">OneHot</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.ordered_choice_encode</span> <span class="k">import</span> <span class="n">OrderedChoiceEncode</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.out_of_design</span> <span class="k">import</span> <span class="n">OutOfDesign</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.remove_fixed</span> <span class="k">import</span> <span class="n">RemoveFixed</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.search_space_to_choice</span> <span class="k">import</span> <span class="n">SearchSpaceToChoice</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.standardize_y</span> <span class="k">import</span> <span class="n">StandardizeY</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.stratified_standardize_y</span> <span class="k">import</span> <span class="n">StratifiedStandardizeY</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.task_encode</span> <span class="k">import</span> <span class="n">TaskEncode</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.trial_as_task</span> <span class="k">import</span> <span class="n">TrialAsTask</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.unit_x</span> <span class="k">import</span> <span class="n">UnitX</span>
-<span class="kn">from</span> <span class="nn">ax.models.discrete.eb_thompson</span> <span class="k">import</span> <span class="n">EmpiricalBayesThompsonSampler</span>
-<span class="kn">from</span> <span class="nn">ax.models.discrete.full_factorial</span> <span class="k">import</span> <span class="n">FullFactorialGenerator</span>
-<span class="kn">from</span> <span class="nn">ax.models.discrete.thompson</span> <span class="k">import</span> <span class="n">ThompsonSampler</span>
-<span class="kn">from</span> <span class="nn">ax.models.random.sobol</span> <span class="k">import</span> <span class="n">SobolGenerator</span>
-<span class="kn">from</span> <span class="nn">ax.models.random.uniform</span> <span class="k">import</span> <span class="n">UniformGenerator</span>
+<span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.convert_metric_names</span> <span class="k">import</span> <span class="n">tconfig_from_mt_experiment</span>
 <span class="kn">from</span> <span class="nn">ax.models.torch.botorch</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">BotorchModel</span><span class="p">,</span>
     <span class="n">TAcqfConstructor</span><span class="p">,</span>
@@ -79,6 +56,15 @@ src="/js/documentation_options.js">
     <span class="n">predict_from_model</span><span class="p">,</span>
     <span class="n">scipy_optimizer</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ax.utils.common.logger</span> <span class="k">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">ax.utils.common.typeutils</span> <span class="k">import</span> <span class="n">checked_cast</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1"># pyre-fixme[19]: __init__ expects 0 args but got 1.</span>
+<span class="n">DEFAULT_TORCH_DEVICE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>
 
 
 <span class="sd">"""</span>
@@ -93,40 +79,7 @@ src="/js/documentation_options.js">
 <span class="sd">"""</span>
 
 
-<span class="n">Cont_X_trans</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">OutOfDesign</span><span class="p">,</span>
-    <span class="n">RemoveFixed</span><span class="p">,</span>
-    <span class="n">OrderedChoiceEncode</span><span class="p">,</span>
-    <span class="n">OneHot</span><span class="p">,</span>
-    <span class="n">IntToFloat</span><span class="p">,</span>
-    <span class="n">Log</span><span class="p">,</span>
-    <span class="n">UnitX</span><span class="p">,</span>
-<span class="p">]</span>
-<span class="n">Discrete_X_trans</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">IntRangeToChoice</span><span class="p">]</span>
-<span class="n">Y_trans</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">IVW</span><span class="p">,</span> <span class="n">Derelativize</span><span class="p">,</span> <span class="n">StandardizeY</span><span class="p">]</span>
-<span class="c1"># Expected `List[Type[Transform]]` for 2nd anonymous parameter to</span>
-<span class="c1"># call `list.__add__` but got `List[Type[SearchSpaceToChoice]]`.</span>
-<span class="n">TS_trans</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Discrete_X_trans</span> <span class="o">+</span> <span class="n">Y_trans</span> <span class="o">+</span> <span class="p">[</span><span class="n">SearchSpaceToChoice</span><span class="p">]</span>
-<span class="n">MTGP_trans</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">RemoveFixed</span><span class="p">,</span>
-    <span class="n">OrderedChoiceEncode</span><span class="p">,</span>
-    <span class="n">OneHot</span><span class="p">,</span>
-    <span class="n">IntToFloat</span><span class="p">,</span>
-    <span class="n">Log</span><span class="p">,</span>
-    <span class="n">UnitX</span><span class="p">,</span>
-    <span class="n">Derelativize</span><span class="p">,</span>
-    <span class="n">ConvertMetricNames</span><span class="p">,</span>
-    <span class="n">TrialAsTask</span><span class="p">,</span>
-    <span class="n">StratifiedStandardizeY</span><span class="p">,</span>
-    <span class="n">TaskEncode</span><span class="p">,</span>
-<span class="p">]</span>
-
-
-<span class="c1"># pyre-fixme[19]: Expected 0 positional arguments.</span>
-<span class="n">DEFAULT_TORCH_DEVICE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="get_sobol"><a class="viewcode-back" href="../../../modelbridge.html#ax.get_sobol">[docs]</a><span class="k">def</span> <span class="nf">get_sobol</span><span class="p">(</span>
+<div class="viewcode-block" id="get_sobol"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.factory.get_sobol">[docs]</a><span class="k">def</span> <span class="nf">get_sobol</span><span class="p">(</span>
     <span class="n">search_space</span><span class="p">:</span> <span class="n">SearchSpace</span><span class="p">,</span>
     <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">deduplicate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -142,19 +95,23 @@ src="/js/documentation_options.js">
 <span class="sd">    Returns:</span>
 <span class="sd">        RandomModelBridge, with SobolGenerator as model.</span>
 <span class="sd">    """</span>
-    <span class="k">return</span> <span class="n">RandomModelBridge</span><span class="p">(</span>
-        <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
-        <span class="n">model</span><span class="o">=</span><span class="n">SobolGenerator</span><span class="p">(</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Factory functions (like `get_sobol`) will soon be deprecated. Use "</span>
+        <span class="s2">"the model registry instead (`Models.SOBOL(...)`)."</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">checked_cast</span><span class="p">(</span>
+        <span class="n">RandomModelBridge</span><span class="p">,</span>
+        <span class="n">Models</span><span class="o">.</span><span class="n">SOBOL</span><span class="p">(</span>
+            <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
             <span class="n">deduplicate</span><span class="o">=</span><span class="n">deduplicate</span><span class="p">,</span>
             <span class="n">init_position</span><span class="o">=</span><span class="n">init_position</span><span class="p">,</span>
             <span class="n">scramble</span><span class="o">=</span><span class="n">scramble</span><span class="p">,</span>
         <span class="p">),</span>
-        <span class="n">transforms</span><span class="o">=</span><span class="n">Cont_X_trans</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_uniform"><a class="viewcode-back" href="../../../modelbridge.html#ax.get_uniform">[docs]</a><span class="k">def</span> <span class="nf">get_uniform</span><span class="p">(</span>
+<div class="viewcode-block" id="get_uniform"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.factory.get_uniform">[docs]</a><span class="k">def</span> <span class="nf">get_uniform</span><span class="p">(</span>
     <span class="n">search_space</span><span class="p">:</span> <span class="n">SearchSpace</span><span class="p">,</span> <span class="n">deduplicate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomModelBridge</span><span class="p">:</span>
     <span class="sd">"""Instantiate uniform generator.</span>
@@ -166,14 +123,17 @@ src="/js/documentation_options.js">
 <span class="sd">    Returns:</span>
 <span class="sd">        RandomModelBridge, with UniformGenerator as model.</span>
 <span class="sd">    """</span>
-    <span class="k">return</span> <span class="n">RandomModelBridge</span><span class="p">(</span>
-        <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
-        <span class="n">model</span><span class="o">=</span><span class="n">UniformGenerator</span><span class="p">(</span><span class="n">deduplicate</span><span class="o">=</span><span class="n">deduplicate</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">),</span>
-        <span class="n">transforms</span><span class="o">=</span><span class="n">Cont_X_trans</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Factory functions (like `get_uniform`) will soon be deprecated). Use "</span>
+        <span class="s2">"the model registry instead (`Models.UNIFORM(...)`)."</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">checked_cast</span><span class="p">(</span>
+        <span class="n">RandomModelBridge</span><span class="p">,</span>
+        <span class="n">Models</span><span class="o">.</span><span class="n">UNIFORM</span><span class="p">(</span><span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">deduplicate</span><span class="o">=</span><span class="n">deduplicate</span><span class="p">),</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_botorch"><a class="viewcode-back" href="../../../modelbridge.html#ax.get_botorch">[docs]</a><span class="k">def</span> <span class="nf">get_botorch</span><span class="p">(</span>
+<div class="viewcode-block" id="get_botorch"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.factory.get_botorch">[docs]</a><span class="k">def</span> <span class="nf">get_botorch</span><span class="p">(</span>
     <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
     <span class="n">search_space</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SearchSpace</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -189,28 +149,32 @@ src="/js/documentation_options.js">
     <span class="n">optimization_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OptimizationConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TorchModelBridge</span><span class="p">:</span>
     <span class="sd">"""Instantiates a BotorchModel."""</span>
-    <span class="k">if</span> <span class="n">search_space</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">search_space</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">search_space</span>
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"BotorchModel requires non-empty data."</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">TorchModelBridge</span><span class="p">(</span>
-        <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-        <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-        <span class="n">model</span><span class="o">=</span><span class="n">BotorchModel</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`BotorchModel` requires non-empty data."</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Factory functions (like `get_botorch`) will soon be deprecated). Use "</span>
+        <span class="s2">"the model registry instead (`Models.BOTORCH(...)`)."</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">checked_cast</span><span class="p">(</span>
+        <span class="n">TorchModelBridge</span><span class="p">,</span>
+        <span class="n">Models</span><span class="o">.</span><span class="n">BOTORCH</span><span class="p">(</span>
+            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span> <span class="ow">or</span> <span class="n">experiment</span><span class="o">.</span><span class="n">search_space</span><span class="p">,</span>
+            <span class="n">torch_dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+            <span class="n">torch_device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">transforms</span><span class="o">=</span><span class="n">transforms</span><span class="p">,</span>
             <span class="n">model_constructor</span><span class="o">=</span><span class="n">model_constructor</span><span class="p">,</span>
             <span class="n">model_predictor</span><span class="o">=</span><span class="n">model_predictor</span><span class="p">,</span>
             <span class="n">acqf_constructor</span><span class="o">=</span><span class="n">acqf_constructor</span><span class="p">,</span>
             <span class="n">acqf_optimizer</span><span class="o">=</span><span class="n">acqf_optimizer</span><span class="p">,</span>
+            <span class="n">refit_on_cv</span><span class="o">=</span><span class="n">refit_on_cv</span><span class="p">,</span>
+            <span class="n">refit_on_update</span><span class="o">=</span><span class="n">refit_on_update</span><span class="p">,</span>
         <span class="p">),</span>
-        <span class="n">transforms</span><span class="o">=</span><span class="n">transforms</span><span class="p">,</span>
-        <span class="n">torch_dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
-        <span class="n">torch_device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
-        <span class="n">optimization_config</span><span class="o">=</span><span class="n">optimization_config</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_GPEI"><a class="viewcode-back" href="../../../modelbridge.html#ax.get_GPEI">[docs]</a><span class="k">def</span> <span class="nf">get_GPEI</span><span class="p">(</span>
+<div class="viewcode-block" id="get_GPEI"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.factory.get_GPEI">[docs]</a><span class="k">def</span> <span class="nf">get_GPEI</span><span class="p">(</span>
     <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
     <span class="n">search_space</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SearchSpace</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -220,16 +184,27 @@ src="/js/documentation_options.js">
     <span class="sd">"""Instantiates a GP model that generates points with EI."""</span>
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"GP+EI BotorchModel requires non-empty data."</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">get_botorch</span><span class="p">(</span>
-        <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-        <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
-        <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
-        <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Factory functions (like `get_GPEI`) will soon be deprecated). Use "</span>
+        <span class="s2">"the model registry instead (`Models.GPEI(...)`)."</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">checked_cast</span><span class="p">(</span>
+        <span class="n">TorchModelBridge</span><span class="p">,</span>
+        <span class="n">Models</span><span class="o">.</span><span class="n">BOTORCH</span><span class="p">(</span>
+            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span> <span class="ow">or</span> <span class="n">experiment</span><span class="o">.</span><span class="n">search_space</span><span class="p">,</span>
+            <span class="n">torch_dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+            <span class="n">torch_device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_MTGP"><a class="viewcode-back" href="../../../modelbridge.html#ax.get_MTGP">[docs]</a><span class="k">def</span> <span class="nf">get_MTGP</span><span class="p">(</span>
+<span class="c1"># TODO[Lena]: how to instantiate MTGP through the enum? It requires a</span>
+<span class="c1"># MultiTypeExperiment, so we would need validation for that, but more importantly,</span>
+<span class="c1"># we need to create `trial_index_to_type` as in the factory function below.</span>
+<span class="c1"># Maybe `MultiTypeExperiment` could have that mapping as a property?</span>
+<div class="viewcode-block" id="get_MTGP"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.factory.get_MTGP">[docs]</a><span class="k">def</span> <span class="nf">get_MTGP</span><span class="p">(</span>
     <span class="n">experiment</span><span class="p">:</span> <span class="n">MultiTypeExperiment</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
     <span class="n">search_space</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SearchSpace</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -251,17 +226,18 @@ src="/js/documentation_options.js">
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_factorial"><a class="viewcode-back" href="../../../modelbridge.html#ax.get_factorial">[docs]</a><span class="k">def</span> <span class="nf">get_factorial</span><span class="p">(</span><span class="n">search_space</span><span class="p">:</span> <span class="n">SearchSpace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DiscreteModelBridge</span><span class="p">:</span>
+<div class="viewcode-block" id="get_factorial"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.factory.get_factorial">[docs]</a><span class="k">def</span> <span class="nf">get_factorial</span><span class="p">(</span><span class="n">search_space</span><span class="p">:</span> <span class="n">SearchSpace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DiscreteModelBridge</span><span class="p">:</span>
     <span class="sd">"""Instantiates a factorial generator."""</span>
-    <span class="k">return</span> <span class="n">DiscreteModelBridge</span><span class="p">(</span>
-        <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">Data</span><span class="p">(),</span>
-        <span class="n">model</span><span class="o">=</span><span class="n">FullFactorialGenerator</span><span class="p">(),</span>
-        <span class="n">transforms</span><span class="o">=</span><span class="n">Discrete_X_trans</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Factory functions (like `get_factorial`) will soon be deprecated). Use "</span>
+        <span class="s2">"the model registry instead (`Models.FACTORIAL(...)`)."</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">checked_cast</span><span class="p">(</span>
+        <span class="n">DiscreteModelBridge</span><span class="p">,</span> <span class="n">Models</span><span class="o">.</span><span class="n">FACTORIAL</span><span class="p">(</span><span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_empirical_bayes_thompson"><a class="viewcode-back" href="../../../modelbridge.html#ax.get_empirical_bayes_thompson">[docs]</a><span class="k">def</span> <span class="nf">get_empirical_bayes_thompson</span><span class="p">(</span>
+<div class="viewcode-block" id="get_empirical_bayes_thompson"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.factory.get_empirical_bayes_thompson">[docs]</a><span class="k">def</span> <span class="nf">get_empirical_bayes_thompson</span><span class="p">(</span>
     <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
     <span class="n">search_space</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SearchSpace</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -272,21 +248,25 @@ src="/js/documentation_options.js">
     <span class="sd">"""Instantiates an empirical Bayes / Thompson sampling model."""</span>
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Empirical Bayes Thompson sampler requires non-empty data."</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">EmpiricalBayesThompsonSampler</span><span class="p">(</span>
-        <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">min_weight</span><span class="o">=</span><span class="n">min_weight</span><span class="p">,</span> <span class="n">uniform_weights</span><span class="o">=</span><span class="n">uniform_weights</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Factory functions (like `get_empirical_bayes_thompson`) will soon be "</span>
+        <span class="s2">"deprecated). Use the model registry instead (`Models.EMPIRICAL_BAYES"</span>
+        <span class="s2">"(...)`)."</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">DiscreteModelBridge</span><span class="p">(</span>
-        <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-        <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span>
-        <span class="k">if</span> <span class="n">search_space</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">else</span> <span class="n">experiment</span><span class="o">.</span><span class="n">search_space</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-        <span class="n">transforms</span><span class="o">=</span><span class="n">TS_trans</span><span class="p">,</span>
+    <span class="k">return</span> <span class="n">checked_cast</span><span class="p">(</span>
+        <span class="n">DiscreteModelBridge</span><span class="p">,</span>
+        <span class="n">Models</span><span class="o">.</span><span class="n">EMPIRICAL_BAYES_THOMPSON</span><span class="p">(</span>
+            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span> <span class="ow">or</span> <span class="n">experiment</span><span class="o">.</span><span class="n">search_space</span><span class="p">,</span>
+            <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span>
+            <span class="n">min_weight</span><span class="o">=</span><span class="n">min_weight</span><span class="p">,</span>
+            <span class="n">uniform_weights</span><span class="o">=</span><span class="n">uniform_weights</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_thompson"><a class="viewcode-back" href="../../../modelbridge.html#ax.get_thompson">[docs]</a><span class="k">def</span> <span class="nf">get_thompson</span><span class="p">(</span>
+<div class="viewcode-block" id="get_thompson"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.factory.get_thompson">[docs]</a><span class="k">def</span> <span class="nf">get_thompson</span><span class="p">(</span>
     <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
     <span class="n">search_space</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SearchSpace</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -297,30 +277,17 @@ src="/js/documentation_options.js">
     <span class="sd">"""Instantiates a Thompson sampling model."""</span>
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Thompson sampler requires non-empty data."</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">ThompsonSampler</span><span class="p">(</span>
-        <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">min_weight</span><span class="o">=</span><span class="n">min_weight</span><span class="p">,</span> <span class="n">uniform_weights</span><span class="o">=</span><span class="n">uniform_weights</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">DiscreteModelBridge</span><span class="p">(</span>
-        <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-        <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span>
-        <span class="k">if</span> <span class="n">search_space</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">else</span> <span class="n">experiment</span><span class="o">.</span><span class="n">search_space</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-        <span class="n">transforms</span><span class="o">=</span><span class="n">TS_trans</span><span class="p">,</span>
+    <span class="k">return</span> <span class="n">checked_cast</span><span class="p">(</span>
+        <span class="n">DiscreteModelBridge</span><span class="p">,</span>
+        <span class="n">Models</span><span class="o">.</span><span class="n">THOMPSON</span><span class="p">(</span>
+            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span> <span class="ow">or</span> <span class="n">experiment</span><span class="o">.</span><span class="n">search_space</span><span class="p">,</span>
+            <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span>
+            <span class="n">min_weight</span><span class="o">=</span><span class="n">min_weight</span><span class="p">,</span>
+            <span class="n">uniform_weights</span><span class="o">=</span><span class="n">uniform_weights</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Models"><a class="viewcode-back" href="../../../modelbridge.html#ax.Models">[docs]</a><span class="k">class</span> <span class="nc">Models</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="sd">"""Registry of available factory functions."""</span>
-
-    <span class="n">SOBOL</span> <span class="o">=</span> <span class="n">get_sobol</span>
-    <span class="n">GPEI</span> <span class="o">=</span> <span class="n">get_GPEI</span>
-    <span class="n">FACTORIAL</span> <span class="o">=</span> <span class="n">get_factorial</span>
-    <span class="n">THOMPSON</span> <span class="o">=</span> <span class="n">get_thompson</span>
-    <span class="n">BOTORCH</span> <span class="o">=</span> <span class="n">get_botorch</span>
-    <span class="n">EMPIRICAL_BAYES_THOMPSON</span> <span class="o">=</span> <span class="n">get_empirical_bayes_thompson</span>
-    <span class="n">UNIFORM</span> <span class="o">=</span> <span class="n">get_uniform</span></div>
 </pre></div>
 </div>
 </div>

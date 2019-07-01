@@ -102,7 +102,6 @@ function require(deps, fxn) {
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
 <span class="kn">from</span> <span class="nn">ax</span> <span class="k">import</span> <span class="o">*</span>
 </pre></div>
 </div>
@@ -245,7 +244,7 @@ function require(deps, fxn) {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can now generate arms, i.e. assignments of parameters to values, that lie within the search space. Below we use a Sobol generator to generate ten quasi-random arms.</p>
+<p>We can now generate arms, i.e. assignments of parameters to values, that lie within the search space. Below we use a Sobol generator to generate ten quasi-random arms. The <code>Models</code> registry provides a set of standard models Ax contains.</p>
 </div>
 </div>
 </div>
@@ -268,14 +267,61 @@ function require(deps, fxn) {
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Arm(parameters={'x1': 1.3987717032432556, 'x2': 2.1646060049533844})
-Arm(parameters={'x1': 4.718068242073059, 'x2': 7.646653652191162})
-Arm(parameters={'x1': 8.719998598098755, 'x2': 3.289695680141449})
-Arm(parameters={'x1': 9.6366548538208, 'x2': 9.800090193748474})
-Arm(parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
+<pre>Arm(parameters={'x1': 3.2536345720291138, 'x2': 9.878522753715515})
+Arm(parameters={'x1': 0.34163210541009903, 'x2': 3.725365698337555})
+Arm(parameters={'x1': 5.165935754776001, 'x2': 7.128967642784119})
+Arm(parameters={'x1': 6.856637597084045, 'x2': 4.637634754180908})
+Arm(parameters={'x1': 1.3681383430957794, 'x2': 6.226785182952881})
 </pre>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To inspect available model settings, we can call <code>view_kwargs</code> or <code>view_defaults</code> on a specific model:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [8]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">Models</span><span class="o">.</span><span class="n">SOBOL</span><span class="o">.</span><span class="n">view_kwargs</span><span class="p">()</span>  <span class="c1"># Shows keyword argument names and typing.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[8]:</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>({'seed': typing.Union[int, NoneType],
+  'deduplicate': bool,
+  'init_position': int,
+  'scramble': bool},
+ {'search_space': ax.core.search_space.SearchSpace,
+  'model': typing.Any,
+  'transforms': typing.Union[typing.List[typing.Type[ax.modelbridge.transforms.base.Transform]], NoneType],
+  'experiment': typing.Union[ax.core.experiment.Experiment, NoneType],
+  'data': typing.Union[ax.core.data.Data, NoneType],
+  'transform_configs': typing.Union[typing.Dict[str, typing.Dict[str, typing.Union[int, float, str, botorch.acquisition.acquisition.AcquisitionFunction]]], NoneType],
+  'status_quo_name': typing.Union[str, NoneType],
+  'status_quo_features': typing.Union[ax.core.observation.ObservationFeatures, NoneType],
+  'optimization_config': typing.Union[ax.core.optimization_config.OptimizationConfig, NoneType]})</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Any of the default arguments can be overriden by simply passing that keyword argument to the model constructor (e.g. <code>Models.SOBOL</code>).</p>
 </div>
 </div>
 </div>
@@ -298,7 +344,7 @@ Arm(parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [8]:</div>
+<div class="prompt input_prompt">In [9]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">BoothMetric</span><span class="p">(</span><span class="n">Metric</span><span class="p">):</span>
@@ -328,7 +374,7 @@ Arm(parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [9]:</div>
+<div class="prompt input_prompt">In [10]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">optimization_config</span> <span class="o">=</span> <span class="n">OptimizationConfig</span><span class="p">(</span>
@@ -353,7 +399,7 @@ Arm(parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [10]:</div>
+<div class="prompt input_prompt">In [11]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">outcome_constraint</span> <span class="o">=</span> <span class="n">OutcomeConstraint</span><span class="p">(</span>
@@ -384,7 +430,7 @@ Arm(parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [11]:</div>
+<div class="prompt input_prompt">In [12]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">MyRunner</span><span class="p">(</span><span class="n">Runner</span><span class="p">):</span>
@@ -420,7 +466,7 @@ Arm(parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [12]:</div>
+<div class="prompt input_prompt">In [13]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">experiment</span><span class="o">.</span><span class="n">new_batch_trial</span><span class="p">(</span><span class="n">generator_run</span><span class="o">=</span><span class="n">generator_run</span><span class="p">)</span>
@@ -431,7 +477,7 @@ Arm(parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[12]:</div>
+<div class="prompt output_prompt">Out[13]:</div>
 <div class="output_text output_subarea output_execute_result">
 <pre>BatchTrial(experiment_name='experiment_building_blocks', index=0, status=TrialStatus.CANDIDATE)</pre>
 </div>
@@ -448,7 +494,7 @@ Arm(parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [13]:</div>
+<div class="prompt input_prompt">In [14]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">arm</span> <span class="ow">in</span> <span class="n">experiment</span><span class="o">.</span><span class="n">trials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">arms</span><span class="p">:</span>
@@ -462,11 +508,11 @@ Arm(parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Arm(name='0_0', parameters={'x1': 1.3987717032432556, 'x2': 2.1646060049533844})
-Arm(name='0_1', parameters={'x1': 4.718068242073059, 'x2': 7.646653652191162})
-Arm(name='0_2', parameters={'x1': 8.719998598098755, 'x2': 3.289695680141449})
-Arm(name='0_3', parameters={'x1': 9.6366548538208, 'x2': 9.800090193748474})
-Arm(name='0_4', parameters={'x1': 3.1741243600845337, 'x2': 4.261414110660553})
+<pre>Arm(name='0_0', parameters={'x1': 3.2536345720291138, 'x2': 9.878522753715515})
+Arm(name='0_1', parameters={'x1': 0.34163210541009903, 'x2': 3.725365698337555})
+Arm(name='0_2', parameters={'x1': 5.165935754776001, 'x2': 7.128967642784119})
+Arm(name='0_3', parameters={'x1': 6.856637597084045, 'x2': 4.637634754180908})
+Arm(name='0_4', parameters={'x1': 1.3681383430957794, 'x2': 6.226785182952881})
 Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </pre>
 </div>
@@ -483,7 +529,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [14]:</div>
+<div class="prompt input_prompt">In [15]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">experiment</span><span class="o">.</span><span class="n">new_trial</span><span class="p">()</span><span class="o">.</span><span class="n">add_arm</span><span class="p">(</span><span class="n">Arm</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'single_arm'</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">'x1'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'x2'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
@@ -494,7 +540,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[14]:</div>
+<div class="prompt output_prompt">Out[15]:</div>
 <div class="output_text output_subarea output_execute_result">
 <pre>Trial(experiment_name='experiment_building_blocks', index=1, status=TrialStatus.CANDIDATE)</pre>
 </div>
@@ -504,7 +550,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [15]:</div>
+<div class="prompt input_prompt">In [16]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">experiment</span><span class="o">.</span><span class="n">trials</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">arm</span><span class="p">)</span>
@@ -533,7 +579,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [16]:</div>
+<div class="prompt input_prompt">In [17]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">experiment</span><span class="o">.</span><span class="n">trials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -544,7 +590,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[16]:</div>
+<div class="prompt output_prompt">Out[17]:</div>
 <div class="output_text output_subarea output_execute_result">
 <pre>BatchTrial(experiment_name='experiment_building_blocks', index=0, status=TrialStatus.RUNNING)</pre>
 </div>
@@ -554,7 +600,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [17]:</div>
+<div class="prompt input_prompt">In [18]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">()</span>
@@ -572,7 +618,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [18]:</div>
+<div class="prompt input_prompt">In [19]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">df</span>
@@ -583,7 +629,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[18]:</div>
+<div class="prompt output_prompt">Out[19]:</div>
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
 <style scoped="">
@@ -604,8 +650,8 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <tr style="text-align: right;">
 <th></th>
 <th>arm_name</th>
-<th>mean</th>
 <th>metric_name</th>
+<th>mean</th>
 <th>sem</th>
 <th>trial_index</th>
 </tr>
@@ -614,48 +660,48 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <tr>
 <th>0</th>
 <td>0_0</td>
-<td>1.619458</td>
 <td>booth</td>
+<td>385.978134</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>1</th>
 <td>0_1</td>
-<td>315.289711</td>
 <td>booth</td>
+<td>0.977559</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>2</th>
 <td>0_2</td>
-<td>316.303112</td>
 <td>booth</td>
+<td>309.625084</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>3</th>
 <td>0_3</td>
-<td>1074.005424</td>
 <td>booth</td>
+<td>261.638524</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>4</th>
 <td>0_4</td>
-<td>53.529681</td>
 <td>booth</td>
+<td>62.241569</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>5</th>
 <td>control</td>
-<td>74.000000</td>
 <td>booth</td>
+<td>74.000000</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
@@ -677,16 +723,16 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we can model the data collected for the initial set of arms using a Gaussian process, and use the Expected Improvement acquisition function to determine the new arms for which to fetch data next.</p>
+<p>Now we can model the data collected for the initial set of arms via Bayesian optimization (using the Botorch model default of Gaussian Process with Expected Improvement acquisition function) to determine the new arms for which to fetch data next.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [19]:</div>
+<div class="prompt input_prompt">In [20]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">gpei</span> <span class="o">=</span> <span class="n">Models</span><span class="o">.</span><span class="n">GPEI</span><span class="p">(</span><span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">gpei</span> <span class="o">=</span> <span class="n">Models</span><span class="o">.</span><span class="n">BOTORCH</span><span class="p">(</span><span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 <span class="n">generator_run</span> <span class="o">=</span> <span class="n">gpei</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">experiment</span><span class="o">.</span><span class="n">new_batch_trial</span><span class="p">(</span><span class="n">generator_run</span><span class="o">=</span><span class="n">generator_run</span><span class="p">)</span>
 </pre></div>
@@ -696,7 +742,17 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[19]:</div>
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/data/users/drfreund/fbsource/fbcode/buck-out/dev/gen/bento/kernels/bento_kernel_ae#link-tree/gpytorch/utils/cholesky.py:42: RuntimeWarning:
+
+A not p.d., added jitter of 1e-08 to the diagonal
+
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[20]:</div>
 <div class="output_text output_subarea output_execute_result">
 <pre>BatchTrial(experiment_name='experiment_building_blocks', index=2, status=TrialStatus.CANDIDATE)</pre>
 </div>
@@ -706,7 +762,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [20]:</div>
+<div class="prompt input_prompt">In [21]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">arm</span> <span class="ow">in</span> <span class="n">experiment</span><span class="o">.</span><span class="n">trials</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">arms</span><span class="p">:</span>
@@ -720,11 +776,11 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Arm(name='2_0', parameters={'x1': 4.125029503629996, 'x2': 0.0})
-Arm(name='2_1', parameters={'x1': 0.0, 'x2': 5.264209099383153})
-Arm(name='2_2', parameters={'x1': 0.0, 'x2': 9.999999999999979})
-Arm(name='2_3', parameters={'x1': 9.737416772347238e-16, 'x2': 2.9307665874333417})
-Arm(name='2_4', parameters={'x1': 6.5130526766729755, 'x2': 1.5363997707452757e-16})
+<pre>Arm(name='2_0', parameters={'x1': 1.93457792812474, 'x2': 2.71875083084198})
+Arm(name='2_1', parameters={'x1': 0.0, 'x2': 5.231730650062736})
+Arm(name='2_2', parameters={'x1': 3.470924216188001, 'x2': 1.6248414523496096e-16})
+Arm(name='2_3', parameters={'x1': 9.999999999999998, 'x2': 1.0166622583795502e-14})
+Arm(name='2_4', parameters={'x1': 3.99761633552033e-12, 'x2': 2.6898579284932627})
 Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </pre>
 </div>
@@ -734,7 +790,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [21]:</div>
+<div class="prompt input_prompt">In [22]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">experiment</span><span class="o">.</span><span class="n">trials</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -747,7 +803,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[21]:</div>
+<div class="prompt output_prompt">Out[22]:</div>
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
 <style scoped="">
@@ -768,8 +824,8 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <tr style="text-align: right;">
 <th></th>
 <th>arm_name</th>
-<th>mean</th>
 <th>metric_name</th>
+<th>mean</th>
 <th>sem</th>
 <th>trial_index</th>
 </tr>
@@ -778,96 +834,96 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <tr>
 <th>0</th>
 <td>0_0</td>
-<td>1.619458</td>
 <td>booth</td>
+<td>385.978134</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>1</th>
 <td>0_1</td>
-<td>315.289711</td>
 <td>booth</td>
+<td>0.977559</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>2</th>
 <td>0_2</td>
-<td>316.303112</td>
 <td>booth</td>
+<td>309.625084</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>3</th>
 <td>0_3</td>
-<td>1074.005424</td>
 <td>booth</td>
+<td>261.638524</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>4</th>
 <td>0_4</td>
-<td>53.529681</td>
 <td>booth</td>
+<td>62.241569</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>5</th>
 <td>control</td>
-<td>74.000000</td>
 <td>booth</td>
+<td>74.000000</td>
 <td>0.0</td>
 <td>0</td>
 </tr>
 <tr>
 <th>6</th>
 <td>2_0</td>
-<td>18.828339</td>
 <td>booth</td>
+<td>2.659891</td>
 <td>0.0</td>
 <td>2</td>
 </tr>
 <tr>
 <th>7</th>
 <td>2_1</td>
-<td>12.519541</td>
 <td>booth</td>
+<td>12.049263</td>
 <td>0.0</td>
 <td>2</td>
 </tr>
 <tr>
 <th>8</th>
 <td>2_2</td>
-<td>194.000000</td>
 <td>booth</td>
+<td>16.225151</td>
 <td>0.0</td>
 <td>2</td>
 </tr>
 <tr>
 <th>9</th>
 <td>2_3</td>
-<td>5.577834</td>
 <td>booth</td>
+<td>234.000000</td>
 <td>0.0</td>
 <td>2</td>
 </tr>
 <tr>
 <th>10</th>
 <td>2_4</td>
-<td>64.655485</td>
 <td>booth</td>
+<td>7.962077</td>
 <td>0.0</td>
 <td>2</td>
 </tr>
 <tr>
 <th>11</th>
 <td>control</td>
-<td>74.000000</td>
 <td>booth</td>
+<td>74.000000</td>
 <td>0.0</td>
 <td>2</td>
 </tr>
@@ -895,7 +951,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [22]:</div>
+<div class="prompt input_prompt">In [23]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">ax.storage.metric_registry</span> <span class="k">import</span> <span class="n">register_metric</span>
@@ -912,7 +968,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [23]:</div>
+<div class="prompt input_prompt">In [24]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">loaded_experiment</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">"experiment.json"</span><span class="p">)</span>
@@ -930,7 +986,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [24]:</div>
+<div class="prompt input_prompt">In [25]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">ax.storage.sqa_store.db</span> <span class="k">import</span> <span class="n">init_engine_and_session_factory</span><span class="p">,</span><span class="n">get_engine</span><span class="p">,</span> <span class="n">create_all_tables</span>
@@ -948,7 +1004,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [25]:</div>
+<div class="prompt input_prompt">In [26]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">save_experiment</span><span class="p">(</span><span class="n">experiment</span><span class="p">)</span>
@@ -959,7 +1015,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [26]:</div>
+<div class="prompt input_prompt">In [27]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">load_experiment</span><span class="p">(</span><span class="n">experiment</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -970,7 +1026,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[26]:</div>
+<div class="prompt output_prompt">Out[27]:</div>
 <div class="output_text output_subarea output_execute_result">
 <pre>Experiment(experiment_building_blocks)</pre>
 </div>
@@ -995,7 +1051,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [27]:</div>
+<div class="prompt input_prompt">In [28]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">evaluation_function</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
@@ -1007,7 +1063,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [28]:</div>
+<div class="prompt input_prompt">In [29]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">simple_experiment</span> <span class="o">=</span> <span class="n">SimpleExperiment</span><span class="p">(</span>
@@ -1028,7 +1084,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [29]:</div>
+<div class="prompt input_prompt">In [30]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">simple_experiment</span><span class="o">.</span><span class="n">new_trial</span><span class="p">()</span><span class="o">.</span><span class="n">add_arm</span><span class="p">(</span><span class="n">Arm</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'single_arm'</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">'x1'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'x2'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
@@ -1039,7 +1095,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[29]:</div>
+<div class="prompt output_prompt">Out[30]:</div>
 <div class="output_text output_subarea output_execute_result">
 <pre>Trial(experiment_name='None', index=0, status=TrialStatus.CANDIDATE)</pre>
 </div>
@@ -1049,7 +1105,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [30]:</div>
+<div class="prompt input_prompt">In [31]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">simple_experiment</span><span class="o">.</span><span class="n">fetch_data</span><span class="p">()</span>
@@ -1060,7 +1116,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [31]:</div>
+<div class="prompt input_prompt">In [32]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">df</span>
@@ -1071,7 +1127,7 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[31]:</div>
+<div class="prompt output_prompt">Out[32]:</div>
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
 <style scoped="">
@@ -1092,8 +1148,8 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <tr style="text-align: right;">
 <th></th>
 <th>arm_name</th>
-<th>mean</th>
 <th>metric_name</th>
+<th>mean</th>
 <th>sem</th>
 <th>trial_index</th>
 </tr>
@@ -1102,8 +1158,8 @@ Arm(name='control', parameters={'x1': 0.0, 'x2': 0.0})
 <tr>
 <th>0</th>
 <td>single_arm</td>
-<td>20.0</td>
 <td>objective</td>
+<td>20.0</td>
 <td>0.0</td>
 <td>0</td>
 </tr>

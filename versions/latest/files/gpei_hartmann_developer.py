@@ -9,7 +9,7 @@ from ax import (
     OutcomeConstraint, 
 )
 from ax.metrics.l2norm import L2NormMetric
-from ax.modelbridge.factory import Models
+from ax.modelbridge.registry import Models
 from ax.plot.contour import plot_contour
 from ax.plot.trace import optimization_trace_single_method
 from ax.utils.measurement.synthetic_functions import hartmann6
@@ -18,8 +18,8 @@ from ax.utils.notebook.plotting import render, init_notebook_plotting
 init_notebook_plotting()
 
 def hartmann_evaluation_function(
-    parameterization, # dict of parameter names to values of those parameters
-    weight=None, # optional weight argument
+    parameterization, # Mapping of parameter names to values of those parameters.
+    weight=None, # Optional weight argument.
 ):
     x = np.array([parameterization.get(f"x{i}") for i in range(6)])
     # In our case, standard error is 0, since we are computing a synthetic function.
@@ -60,7 +60,7 @@ for i in range(5):
 for i in range(25):
     print(f"Running GP+EI optimization trial {i+1}/15...")
     # Reinitialize GP+EI model at each step with updated data.
-    gpei = Models.GPEI(experiment=exp, data=exp.eval())
+    gpei = Models.BOTORCH(experiment=exp, data=exp.eval())
     batch = exp.new_trial(generator_run=gpei.gen(1))
     
 print("Done!")

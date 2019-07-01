@@ -3,14 +3,7 @@ import numpy as np
 import pandas as pd
 import sklearn as skl
 from typing import Dict, Optional, Tuple, Union
-from ax import (
-    ChoiceParameter,
-    Arm,
-    ParameterType,
-    SearchSpace,
-    SimpleExperiment,
-    modelbridge,
-)
+from ax import Arm, ChoiceParameter, Models, ParameterType, SearchSpace, SimpleExperiment
 from ax.plot.scatter import plot_fitted
 from ax.utils.notebook.plotting import render, init_notebook_plotting
 from ax.utils.stats.statstools import agresti_coull_sem
@@ -44,9 +37,10 @@ one_hot_encoder = skl.preprocessing.OneHotEncoder(
 def factorial_evaluation_function(
     # `parameterization` is a dict of parameter names to values of those parameters.
     parameterization: Dict[str, Optional[Union[str, bool, float]]],
-    # `weight` is the weight of the parameterization, which is used to determine the variance of the estimate
+    # `weight` is the weight of the parameterization, 
+    # which is used to determine the variance of the estimate.
     weight: Optional[float] = None,
-) -> Dict[str, Tuple[float, float]]:  # dict of metric names to tuple of mean and standard error.
+) -> Dict[str, Tuple[float, float]]:  # Mapping of metric names to tuple of mean and standard error.
     batch_size = 10000
     noise_level = 0.0
     weight = weight if weight is not None else 1.0
@@ -77,8 +71,8 @@ exp.status_quo = Arm(
     parameters={"factor1": "level11", "factor2": "level21", "factor3": "level31"}
 )
 
-factorial = modelbridge.get_factorial(search_space=exp.search_space)
-factorial_run = factorial.gen(n=-1)
+factorial = Models.FACTORIAL(search_space=exp.search_space)
+factorial_run = factorial.gen(n=-1)  # Number of arms to generate is derived from the search space.
 print(len(factorial_run.arms))
 
 trial = (
@@ -91,9 +85,9 @@ print(trial.arm_weights[trial.status_quo])
 
 models = []
 for i in range(4):
-    print("Running iteration {}...".format(i))
+    print("Running iteration {}...".format(i+1))
     data = exp.eval_trial(trial)
-    thompson = modelbridge.get_thompson(
+    thompson = Models.THOMPSON(
         experiment=exp, data=data, min_weight=0.01
     )
     models.append(thompson)

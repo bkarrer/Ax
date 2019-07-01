@@ -12,7 +12,7 @@ from ax import (
 
 from ax.metrics.l2norm import L2NormMetric
 from ax.modelbridge.cross_validation import cross_validate
-from ax.modelbridge.factory import Models
+from ax.modelbridge.registry import Models
 from ax.plot.contour import interact_contour, plot_contour
 from ax.plot.diagnostic import interact_cross_validation
 from ax.plot.scatter import(

@@ -146,99 +146,15 @@ names provided in generation steps.</p>
 </div>
 <div class="section" id="module-ax.modelbridge.factory">
 <span id="model-bridge-factory"></span><h3>Model Bridge Factory<a class="headerlink" href="#module-ax.modelbridge.factory" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
-<dt id="ax.modelbridge.factory.Models">
-<em class="property">class </em><code class="sig-prename descclassname">ax.modelbridge.factory.</code><code class="sig-name descname">Models</code><a class="reference internal" href="_modules/ax/modelbridge/factory.html#Models"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ax.modelbridge.factory.Models" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></a></p>
-<p>Registry of available factory functions.</p>
-<dl class="method">
-<dt id="ax.modelbridge.factory.Models.BOTORCH">
-<code class="sig-name descname">BOTORCH</code><span class="sig-paren">(</span><em class="sig-param">data, search_space=None, dtype=torch.float64, device=device(type='cpu'), transforms=[&lt;class 'ax.modelbridge.transforms.out_of_design.OutOfDesign'&gt;, &lt;class 'ax.modelbridge.transforms.remove_fixed.RemoveFixed'&gt;, &lt;class 'ax.modelbridge.transforms.ordered_choice_encode.OrderedChoiceEncode'&gt;, &lt;class 'ax.modelbridge.transforms.one_hot.OneHot'&gt;, &lt;class 'ax.modelbridge.transforms.int_to_float.IntToFloat'&gt;, &lt;class 'ax.modelbridge.transforms.log.Log'&gt;, &lt;class 'ax.modelbridge.transforms.unit_x.UnitX'&gt;, &lt;class 'ax.modelbridge.transforms.ivw.IVW'&gt;, &lt;class 'ax.modelbridge.transforms.derelativize.Derelativize'&gt;, &lt;class 'ax.modelbridge.transforms.standardize_y.StandardizeY'&gt;], model_constructor=&lt;function get_and_fit_model&gt;, model_predictor=&lt;function predict_from_model&gt;, acqf_constructor=&lt;function get_NEI&gt;, acqf_optimizer=&lt;function scipy_optimizer&gt;, refit_on_cv=False, refit_on_update=True, optimization_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.modelbridge.factory.Models.BOTORCH" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a BotorchModel.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ax.modelbridge.torch.TorchModelBridge" title="ax.modelbridge.torch.TorchModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">TorchModelBridge</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.modelbridge.factory.Models.EMPIRICAL_BAYES_THOMPSON">
-<code class="sig-name descname">EMPIRICAL_BAYES_THOMPSON</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">search_space=None</em>, <em class="sig-param">num_samples=10000</em>, <em class="sig-param">min_weight=None</em>, <em class="sig-param">uniform_weights=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.modelbridge.factory.Models.EMPIRICAL_BAYES_THOMPSON" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates an empirical Bayes / Thompson sampling model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ax.modelbridge.discrete.DiscreteModelBridge" title="ax.modelbridge.discrete.DiscreteModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteModelBridge</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.modelbridge.factory.Models.FACTORIAL">
-<code class="sig-name descname">FACTORIAL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ax.modelbridge.factory.Models.FACTORIAL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a factorial generator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ax.modelbridge.discrete.DiscreteModelBridge" title="ax.modelbridge.discrete.DiscreteModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteModelBridge</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.modelbridge.factory.Models.GPEI">
-<code class="sig-name descname">GPEI</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">search_space=None</em>, <em class="sig-param">dtype=torch.float64</em>, <em class="sig-param">device=device(type='cpu')</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.modelbridge.factory.Models.GPEI" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a GP model that generates points with EI.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ax.modelbridge.torch.TorchModelBridge" title="ax.modelbridge.torch.TorchModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">TorchModelBridge</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.modelbridge.factory.Models.SOBOL">
-<code class="sig-name descname">SOBOL</code><span class="sig-paren">(</span><em class="sig-param">seed=None</em>, <em class="sig-param">deduplicate=False</em>, <em class="sig-param">init_position=0</em>, <em class="sig-param">scramble=True</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.modelbridge.factory.Models.SOBOL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a Sobol sequence quasi-random generator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>search_space</strong> (<a class="reference internal" href="core.html#ax.core.search_space.SearchSpace" title="ax.core.search_space.SearchSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">SearchSpace</span></code></a>) – Sobol generator search space.</p></li>
-<li><p><strong>kwargs</strong> – Custom args for sobol generator.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomModelBridge</span></code></p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>RandomModelBridge, with SobolGenerator as model.</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.modelbridge.factory.Models.THOMPSON">
-<code class="sig-name descname">THOMPSON</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">search_space=None</em>, <em class="sig-param">num_samples=10000</em>, <em class="sig-param">min_weight=None</em>, <em class="sig-param">uniform_weights=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.modelbridge.factory.Models.THOMPSON" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiates a Thompson sampling model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ax.modelbridge.discrete.DiscreteModelBridge" title="ax.modelbridge.discrete.DiscreteModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteModelBridge</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="method">
-<dt id="ax.modelbridge.factory.Models.UNIFORM">
-<code class="sig-name descname">UNIFORM</code><span class="sig-paren">(</span><em class="sig-param">deduplicate=False</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ax.modelbridge.factory.Models.UNIFORM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiate uniform generator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>search_space</strong> (<a class="reference internal" href="core.html#ax.core.search_space.SearchSpace" title="ax.core.search_space.SearchSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">SearchSpace</span></code></a>) – Uniform generator search space.</p></li>
-<li><p><strong>kwargs</strong> – Custom args for uniform generator.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomModelBridge</span></code></p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>RandomModelBridge, with UniformGenerator as model.</p>
-</dd>
-</dl>
-</dd></dl>
+<dl class="data">
+<dt id="ax.modelbridge.factory.DEFAULT_TORCH_DEVICE">
+<code class="sig-prename descclassname">ax.modelbridge.factory.</code><code class="sig-name descname">DEFAULT_TORCH_DEVICE</code><em class="property"> = device(type='cpu')</em><a class="headerlink" href="#ax.modelbridge.factory.DEFAULT_TORCH_DEVICE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Module containing functions that generate standard models, such as Sobol,
+GP+EI, etc.</p>
+<p>Note: a special case here is a composite generator, which requires an
+additional <code class="docutils literal notranslate"><span class="pre">GenerationStrategy</span></code> and is able to delegate work to multiple models
+(for instance, to a random model to generate the first trial, and to an
+optimization model for subsequent trials).</p>
 </dd></dl>
 <dl class="function">
 <dt id="ax.modelbridge.factory.get_GPEI">

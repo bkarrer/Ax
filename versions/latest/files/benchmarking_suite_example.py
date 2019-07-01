@@ -64,6 +64,23 @@ gramacy_problem = BenchmarkProblem(
     search_space=search_space,
 )
 
+from ax.modelbridge.generation_strategy import GenerationStrategy, GenerationStep
+from ax.modelbridge.registry import Models
+from ax.modelbridge.transforms.unit_x import UnitX
+from ax.modelbridge.transforms.standardize_y import StandardizeY
+
+strategy1 = GenerationStrategy(
+    name='GP+NEI',
+    steps=[
+        GenerationStep(model=Models.SOBOL, num_arms=10, model_kwargs={"scramble": False}),
+        GenerationStep(
+            model=Models.BOTORCH, 
+            num_arms=-1,  # Do not limit the number of arms this phase can generate.
+            model_kwargs={"transforms": [UnitX, StandardizeY]},
+        ),
+    ],
+)
+
 from ax.modelbridge.torch import TorchModelBridge
 from ax.models.torch.botorch import BotorchModel
 from ax.modelbridge.transforms.unit_x import UnitX
@@ -78,27 +95,15 @@ def get_botorch_model(experiment, data, search_space):
         model=m,
         transforms=[UnitX, StandardizeY],
     )
-
-from ax.modelbridge.generation_strategy import GenerationStrategy, GenerationStep
-
-def unscrambled_sobol(search_space):
-    return get_sobol(search_space, scramble=False)
-
-strategy1 = GenerationStrategy(
-    name='GP+NEI',
-    steps=[
-        GenerationStep(model=unscrambled_sobol, num_arms=10),
-        GenerationStep(model=get_botorch_model, num_arms=10),
-    ],
-)
+generation_step = GenerationStep(model=get_botorch_model, num_arms=10)
 
 from ax.modelbridge.factory import get_sobol
 
 strategy2 = GenerationStrategy(
     name='Quasirandom',
     steps=[
-        GenerationStep(model=unscrambled_sobol, num_arms=10),
-        GenerationStep(model=get_sobol, num_arms=10),
+        GenerationStep(model=Models.SOBOL, num_arms=10, model_kwargs={"scramble": False}),
+        GenerationStep(model=Models.SOBOL, num_arms=-1),
     ],
 )
 

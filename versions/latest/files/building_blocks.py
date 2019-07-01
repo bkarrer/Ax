@@ -1,6 +1,5 @@
 
 import pandas as pd
-
 from ax import *
 
 range_param1 = RangeParameter(name="x1", lower=0.0, upper=10.0, parameter_type=ParameterType.FLOAT)
@@ -39,6 +38,8 @@ generator_run = sobol.gen(5)
 
 for arm in generator_run.arms:
     print(arm)
+
+Models.SOBOL.view_kwargs()  # Shows keyword argument names and typing.
 
 class BoothMetric(Metric):
     def fetch_trial_data(self, trial):  
@@ -90,7 +91,7 @@ data = experiment.fetch_data()
 
 data.df
 
-gpei = Models.GPEI(experiment=experiment, data=data)
+gpei = Models.BOTORCH(experiment=experiment, data=data)
 generator_run = gpei.gen(5)
 experiment.new_batch_trial(generator_run=generator_run)
 
