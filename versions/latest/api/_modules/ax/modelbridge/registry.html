@@ -211,7 +211,6 @@ src="/js/documentation_options.js">
         <span class="n">silently_filter_kwargs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># TODO[Lena]: default to False</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelBridge</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">MODEL_KEY_TO_MODEL_SETUP</span>
         <span class="c1"># All model bridges require either a search space or an experiment.</span>
         <span class="k">assert</span> <span class="n">search_space</span> <span class="ow">or</span> <span class="n">experiment</span><span class="p">,</span> <span class="s2">"Search space or experiment required."</span>
@@ -219,7 +218,6 @@ src="/js/documentation_options.js">
         <span class="n">model_class</span> <span class="o">=</span> <span class="n">model_setup_info</span><span class="o">.</span><span class="n">model_class</span>
         <span class="n">bridge_class</span> <span class="o">=</span> <span class="n">model_setup_info</span><span class="o">.</span><span class="n">bridge_class</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">silently_filter_kwargs</span><span class="p">:</span>
-            <span class="c1">#</span>
             <span class="n">validate_kwarg_typing</span><span class="p">(</span>  <span class="c1"># TODO[Lena]: T46467254, pragma: no cover</span>
                 <span class="n">typed_callables</span><span class="o">=</span><span class="p">[</span><span class="n">model_class</span><span class="p">,</span> <span class="n">bridge_class</span><span class="p">],</span>
                 <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
