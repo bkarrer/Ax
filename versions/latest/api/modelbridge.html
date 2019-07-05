@@ -168,11 +168,17 @@ optimization model for subsequent trials).</p>
 </dd></dl>
 <dl class="function">
 <dt id="ax.modelbridge.factory.get_MTGP">
-<code class="sig-prename descclassname">ax.modelbridge.factory.</code><code class="sig-name descname">get_MTGP</code><span class="sig-paren">(</span><em class="sig-param">experiment</em>, <em class="sig-param">data</em>, <em class="sig-param">search_space=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ax/modelbridge/factory.html#get_MTGP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ax.modelbridge.factory.get_MTGP" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ax.modelbridge.factory.</code><code class="sig-name descname">get_MTGP</code><span class="sig-paren">(</span><em class="sig-param">experiment</em>, <em class="sig-param">data</em>, <em class="sig-param">is_multi_type=True</em>, <em class="sig-param">search_space=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ax/modelbridge/factory.html#get_MTGP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ax.modelbridge.factory.get_MTGP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Instantiates a Multi-task GP model that generates points with EI.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ax.modelbridge.torch.TorchModelBridge" title="ax.modelbridge.torch.TorchModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">TorchModelBridge</span></code></a></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>is_multi_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – If is_multi_type is True then experiment should be a
+MultiTypeExperiment and a Multi-type Multi-task GP model will be
+instantiated.
+Otherwise, the model will be a Single-type Multi-task GP.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#ax.modelbridge.torch.TorchModelBridge" title="ax.modelbridge.torch.TorchModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">TorchModelBridge</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

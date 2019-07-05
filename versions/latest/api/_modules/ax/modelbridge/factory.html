@@ -39,7 +39,13 @@ src="/js/documentation_options.js">
 <span class="kn">from</span> <span class="nn">ax.core.search_space</span> <span class="k">import</span> <span class="n">SearchSpace</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.discrete</span> <span class="k">import</span> <span class="n">DiscreteModelBridge</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.random</span> <span class="k">import</span> <span class="n">RandomModelBridge</span>
-<span class="kn">from</span> <span class="nn">ax.modelbridge.registry</span> <span class="k">import</span> <span class="n">Cont_X_trans</span><span class="p">,</span> <span class="n">Models</span><span class="p">,</span> <span class="n">MTGP_trans</span><span class="p">,</span> <span class="n">Y_trans</span>
+<span class="kn">from</span> <span class="nn">ax.modelbridge.registry</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Cont_X_trans</span><span class="p">,</span>
+    <span class="n">Models</span><span class="p">,</span>
+    <span class="n">MT_MTGP_trans</span><span class="p">,</span>
+    <span class="n">ST_MTGP_trans</span><span class="p">,</span>
+    <span class="n">Y_trans</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.torch</span> <span class="k">import</span> <span class="n">TorchModelBridge</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.base</span> <span class="k">import</span> <span class="n">Transform</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.convert_metric_names</span> <span class="k">import</span> <span class="n">tconfig_from_mt_experiment</span>
@@ -201,27 +207,50 @@ src="/js/documentation_options.js">
     <span class="p">)</span></div>
 
 
-<span class="c1"># TODO[Lena]: how to instantiate MTGP through the enum? It requires a</span>
-<span class="c1"># MultiTypeExperiment, so we would need validation for that, but more importantly,</span>
+<span class="c1"># TODO[Lena]: how to instantiate MTGP through the enum? The Multi-type MTGP requires</span>
+<span class="c1"># a MultiTypeExperiment, so we would need validation for that, but more importantly,</span>
 <span class="c1"># we need to create `trial_index_to_type` as in the factory function below.</span>
 <span class="c1"># Maybe `MultiTypeExperiment` could have that mapping as a property?</span>
 <div class="viewcode-block" id="get_MTGP"><a class="viewcode-back" href="../../../modelbridge.html#ax.modelbridge.factory.get_MTGP">[docs]</a><span class="k">def</span> <span class="nf">get_MTGP</span><span class="p">(</span>
-    <span class="n">experiment</span><span class="p">:</span> <span class="n">MultiTypeExperiment</span><span class="p">,</span>
+    <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
+    <span class="n">is_multi_type</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">search_space</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SearchSpace</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TorchModelBridge</span><span class="p">:</span>
-    <span class="sd">"""Instantiates a Multi-task GP model that generates points with EI."""</span>
-    <span class="n">trial_index_to_type</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">index</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">trial_type</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">experiment</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+    <span class="sd">"""Instantiates a Multi-task GP model that generates points with EI.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        is_multi_type: If is_multi_type is True then experiment should be a</span>
+<span class="sd">            MultiTypeExperiment and a Multi-type Multi-task GP model will be</span>
+<span class="sd">            instantiated.</span>
+<span class="sd">            Otherwise, the model will be a Single-type Multi-task GP.</span>
+<span class="sd">    """</span>
+
+    <span class="k">if</span> <span class="n">is_multi_type</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span> <span class="n">MultiTypeExperiment</span><span class="p">):</span>
+        <span class="n">trial_index_to_type</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">index</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">trial_type</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">experiment</span><span class="o">.</span><span class="n">trials</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="n">transforms</span> <span class="o">=</span> <span class="n">MT_MTGP_trans</span>
+        <span class="n">transform_configs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"TrialAsTask"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"trial_level_map"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"trial_type"</span><span class="p">:</span> <span class="n">trial_index_to_type</span><span class="p">}},</span>
+            <span class="s2">"ConvertMetricNames"</span><span class="p">:</span> <span class="n">tconfig_from_mt_experiment</span><span class="p">(</span><span class="n">experiment</span><span class="p">),</span>
+        <span class="p">}</span>
+    <span class="k">elif</span> <span class="n">is_multi_type</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"If is_multi_type is True, the input experiment type should be "</span>
+            <span class="s2">"MultiTypeExperiment."</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">transforms</span> <span class="o">=</span> <span class="n">ST_MTGP_trans</span>
+        <span class="n">transform_configs</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="k">return</span> <span class="n">TorchModelBridge</span><span class="p">(</span>
         <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
         <span class="n">search_space</span><span class="o">=</span><span class="n">search_space</span> <span class="ow">or</span> <span class="n">experiment</span><span class="o">.</span><span class="n">search_space</span><span class="p">,</span>
         <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
         <span class="n">model</span><span class="o">=</span><span class="n">BotorchModel</span><span class="p">(),</span>
-        <span class="n">transforms</span><span class="o">=</span><span class="n">MTGP_trans</span><span class="p">,</span>
-        <span class="n">transform_configs</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">"TrialAsTask"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"trial_level_map"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"trial_type"</span><span class="p">:</span> <span class="n">trial_index_to_type</span><span class="p">}},</span>
-            <span class="s2">"ConvertMetricNames"</span><span class="p">:</span> <span class="n">tconfig_from_mt_experiment</span><span class="p">(</span><span class="n">experiment</span><span class="p">),</span>
-        <span class="p">},</span>
+        <span class="n">transforms</span><span class="o">=</span><span class="n">transforms</span><span class="p">,</span>
+        <span class="n">transform_configs</span><span class="o">=</span><span class="n">transform_configs</span><span class="p">,</span>
         <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">double</span><span class="p">,</span>
         <span class="n">torch_device</span><span class="o">=</span><span class="n">DEFAULT_TORCH_DEVICE</span><span class="p">,</span>
     <span class="p">)</span></div>

@@ -98,7 +98,9 @@ src="/js/documentation_options.js">
 <span class="c1"># Expected `List[Type[Transform]]` for 2nd anonymous parameter to</span>
 <span class="c1"># call `list.__add__` but got `List[Type[SearchSpaceToChoice]]`.</span>
 <span class="n">TS_trans</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Discrete_X_trans</span> <span class="o">+</span> <span class="n">Y_trans</span> <span class="o">+</span> <span class="p">[</span><span class="n">SearchSpaceToChoice</span><span class="p">]</span>
-<span class="n">MTGP_trans</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+
+<span class="c1"># Multi-type MTGP transforms</span>
+<span class="n">MT_MTGP_trans</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">RemoveFixed</span><span class="p">,</span>
     <span class="n">OrderedChoiceEncode</span><span class="p">,</span>
     <span class="n">OneHot</span><span class="p">,</span>
@@ -107,6 +109,20 @@ src="/js/documentation_options.js">
     <span class="n">UnitX</span><span class="p">,</span>
     <span class="n">Derelativize</span><span class="p">,</span>
     <span class="n">ConvertMetricNames</span><span class="p">,</span>
+    <span class="n">TrialAsTask</span><span class="p">,</span>
+    <span class="n">StratifiedStandardizeY</span><span class="p">,</span>
+    <span class="n">TaskEncode</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Single-type MTGP transforms</span>
+<span class="n">ST_MTGP_trans</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">RemoveFixed</span><span class="p">,</span>
+    <span class="n">OrderedChoiceEncode</span><span class="p">,</span>
+    <span class="n">OneHot</span><span class="p">,</span>
+    <span class="n">IntToFloat</span><span class="p">,</span>
+    <span class="n">Log</span><span class="p">,</span>
+    <span class="n">UnitX</span><span class="p">,</span>
+    <span class="n">Derelativize</span><span class="p">,</span>
     <span class="n">TrialAsTask</span><span class="p">,</span>
     <span class="n">StratifiedStandardizeY</span><span class="p">,</span>
     <span class="n">TaskEncode</span><span class="p">,</span>
