@@ -49,6 +49,7 @@ src="/js/documentation_options.js">
 <span class="kn">from</span> <span class="nn">ax.core.search_space</span> <span class="k">import</span> <span class="n">SearchSpace</span>
 <span class="kn">from</span> <span class="nn">ax.core.simple_experiment</span> <span class="k">import</span> <span class="n">SimpleExperiment</span>
 <span class="kn">from</span> <span class="nn">ax.core.trial</span> <span class="k">import</span> <span class="n">Trial</span>
+<span class="kn">from</span> <span class="nn">ax.modelbridge.generation_strategy</span> <span class="k">import</span> <span class="n">GenerationStrategy</span>
 <span class="kn">from</span> <span class="nn">ax.modelbridge.transforms.base</span> <span class="k">import</span> <span class="n">Transform</span>
 <span class="kn">from</span> <span class="nn">ax.runners.synthetic</span> <span class="k">import</span> <span class="n">SyntheticRunner</span>
 <span class="kn">from</span> <span class="nn">ax.storage.transform_registry</span> <span class="k">import</span> <span class="n">TRANSFORM_REGISTRY</span>
@@ -296,6 +297,27 @@ src="/js/documentation_options.js">
         <span class="s2">"__type"</span><span class="p">:</span> <span class="s2">"Type[Transform]"</span><span class="p">,</span>
         <span class="s2">"index_in_registry"</span><span class="p">:</span> <span class="n">TRANSFORM_REGISTRY</span><span class="p">[</span><span class="n">transform_type</span><span class="p">],</span>
         <span class="s2">"transform_type"</span><span class="p">:</span> <span class="n">f</span><span class="s2">"</span><span class="si">{transform_type}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="generation_strategy_to_dict"><a class="viewcode-back" href="../../../../storage.html#ax.storage.json_store.encoders.generation_strategy_to_dict">[docs]</a><span class="k">def</span> <span class="nf">generation_strategy_to_dict</span><span class="p">(</span>
+    <span class="n">generation_strategy</span><span class="p">:</span> <span class="n">GenerationStrategy</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="n">uses_non_registered_models</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"Generation strategies that use custom models provided through "</span>
+            <span class="s2">"callables cannot be serialized and stored."</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"__type"</span><span class="p">:</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s2">"steps"</span><span class="p">:</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="n">_steps</span><span class="p">,</span>
+        <span class="s2">"generated"</span><span class="p">:</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="n">_generated</span><span class="p">,</span>
+        <span class="s2">"observed"</span><span class="p">:</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="n">_observed</span><span class="p">,</span>
+        <span class="s2">"data"</span><span class="p">:</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span>
+        <span class="s2">"curr"</span><span class="p">:</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="n">_curr</span><span class="p">,</span>
+        <span class="s2">"last_generator_run"</span><span class="p">:</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="n">_last_generator_run</span><span class="p">,</span>
+        <span class="s2">"had_initialized_model"</span><span class="p">:</span> <span class="n">generation_strategy</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">}</span></div>
 </pre></div>
 </div>

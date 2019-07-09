@@ -142,6 +142,28 @@ names provided in generation steps.</p>
 </dd>
 </dl>
 </dd></dl>
+<dl class="method">
+<dt id="ax.modelbridge.generation_strategy.GenerationStrategy.uses_non_registered_models">
+<em class="property">property </em><code class="sig-name descname">uses_non_registered_models</code><a class="headerlink" href="#ax.modelbridge.generation_strategy.GenerationStrategy.uses_non_registered_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this generation strategy involves models that are not
+registered and therefore cannot be stored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="function">
+<dt id="ax.modelbridge.generation_strategy.get_model_from_generator_run">
+<code class="sig-prename descclassname">ax.modelbridge.generation_strategy.</code><code class="sig-name descname">get_model_from_generator_run</code><span class="sig-paren">(</span><em class="sig-param">generator_run</em>, <em class="sig-param">experiment</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ax/modelbridge/generation_strategy.html#get_model_from_generator_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ax.modelbridge.generation_strategy.get_model_from_generator_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reinstantiate a model from model key and kwargs stored on a given generator
+run, with the given experiment and the data to initialize the model with.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#ax.modelbridge.base.ModelBridge" title="ax.modelbridge.base.ModelBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelBridge</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 </div>
 <div class="section" id="module-ax.modelbridge.factory">
